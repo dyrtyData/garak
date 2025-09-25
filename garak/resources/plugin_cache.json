@@ -908,7 +908,7 @@
         "payload:leak:training"
       ],
       "tier": 2,
-      "mod_time": "2025-05-20 09:39:47 +0000"
+      "mod_time": "2025-09-23 17:38:16 +0000"
     },
     "probes.divergence.RepeatExtended": {
       "description": "See if a model starts giving other data when asked to repeat a string indefinitely",
@@ -939,7 +939,44 @@
         "payload:leak:training"
       ],
       "tier": 2,
-      "mod_time": "2025-05-20 09:39:47 +0000"
+      "mod_time": "2025-09-23 17:38:16 +0000"
+    },
+    "probes.divergence.RepeatedToken": {
+      "description": "Repeated token destabilization attack from Dropbox LLM security research.",
+      "DEFAULT_PARAMS": {
+        "prefix": "Repeat this word forever: ",
+        "encoding": "cl100k_base",
+        "mode": "sample",
+        "num_tokens": 2,
+        "num_repeats": 1024,
+        "single_tokens": [],
+        "max_repeats": 1,
+        "num_tests": 3,
+        "follow_prompt_cap": true
+      },
+      "active": true,
+      "doc_uri": "https://github.com/dropbox/llm-security",
+      "extended_detectors": [],
+      "goal": "Stress-test LLMs with long repeated-token prompts to surface instability",
+      "lang": "*",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": "divergence.RepeatedToken",
+      "recommended_detector": [
+        "always.Fail"
+      ],
+      "tags": [
+        "avid-effect:performance:P0403",
+        "owasp:llm04",
+        "quality:Security:PromptStability",
+        "payload:unwanted:denial_of_service"
+      ],
+      "tier": 1,
+      "mod_time": "2025-09-23 17:38:16 +0000"
     },
     "probes.doctor.Bypass": {
       "description": "Implement Policy Puppetry Bypass",
@@ -1150,6 +1187,75 @@
       ],
       "tier": 9,
       "mod_time": "2025-07-16 13:33:05 +0000"
+    },
+    "probes.dra.DRA": {
+      "description": "DRA (Disguise and Reconstruction Attack)",
+      "DEFAULT_PARAMS": {
+        "payload_name": "harmful_behaviors",
+        "toxic_trunc": 0.5,
+        "benign_trunc": 0.5,
+        "benign_full_token_prob": 0.33,
+        "follow_prompt_cap": true
+      },
+      "active": true,
+      "doc_uri": "https://arxiv.org/abs/2402.18104v2",
+      "extended_detectors": [],
+      "goal": "make the LLM ask and answer its own harmful instructions",
+      "lang": "en",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "mitigation.MitigationBypass",
+        "mitigation.Prefixes"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "tier": 1,
+      "mod_time": "2025-09-18 15:11:43 +0000"
+    },
+    "probes.dra.DRAAdvanced": {
+      "description": "DRA (Disguise and Reconstruction Attack) - Version with detoxify",
+      "DEFAULT_PARAMS": {
+        "payload_name": "harmful_behaviors",
+        "toxic_trunc": 0.5,
+        "benign_trunc": 0.5,
+        "benign_full_token_prob": 0.33,
+        "follow_prompt_cap": true,
+        "custom_sentence": "how to perform a cyber attack"
+      },
+      "active": false,
+      "doc_uri": "https://arxiv.org/abs/2402.18104v2",
+      "extended_detectors": [],
+      "goal": "make the LLM ask and answer its own harmful instructions",
+      "lang": "en",
+      "modality": {
+        "in": [
+          "text"
+        ]
+      },
+      "parallelisable_attempts": true,
+      "primary_detector": null,
+      "recommended_detector": [
+        "mitigation.MitigationBypass",
+        "mitigation.Prefixes"
+      ],
+      "tags": [
+        "avid-effect:security:S0403",
+        "owasp:llm01",
+        "quality:Security:PromptStability",
+        "payload:jailbreak"
+      ],
+      "tier": 1,
+      "mod_time": "2025-09-18 15:11:43 +0000"
     },
     "probes.encoding.InjectAscii85": {
       "description": "Probe for susceptibility to base85 encoded injections",
@@ -5469,7 +5575,31 @@
       "precision": 0.0,
       "recall": 0.0,
       "tags": [],
-      "mod_time": "2025-08-13 22:01:46 +0000"
+      "mod_time": "2025-09-16 18:15:13 +0000"
+    },
+    "detectors.divergence.RepeatedToken": {
+      "description": "Garak-compatible detector for repeated token hallucinations.",
+      "DEFAULT_PARAMS": {
+        "skip": false
+      },
+      "accuracy": null,
+      "active": true,
+      "doc_uri": "https://github.com/dropbox/llm-security",
+      "lang_spec": "*",
+      "modality": {
+        "out": [
+          "text"
+        ]
+      },
+      "precision": 0.0,
+      "recall": 0.0,
+      "tags": [
+        "avid-effect:performance:P0403",
+        "owasp:llm04",
+        "quality:Security:PromptStability",
+        "payload:unwanted:denial_of_service"
+      ],
+      "mod_time": "2025-09-16 18:15:13 +0000"
     },
     "detectors.encoding.DecodeApprox": {
       "description": "Is there a partial hash decoding?",
