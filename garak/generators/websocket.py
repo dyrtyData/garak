@@ -49,7 +49,7 @@ class WebSocketGenerator(Generator):
     handling authentication, frame parsing, and response reconstruction.
     
     Configuration parameters:
-    - endpoint: WebSocket URL (ws:// or wss://)
+    - uri: WebSocket URL (ws:// or wss://)
     - auth_type: Authentication method ('basic', 'bearer', 'custom')
     - username/password: For basic authentication
     - api_key: API key parameter
@@ -61,7 +61,7 @@ class WebSocketGenerator(Generator):
     """
 
     DEFAULT_PARAMS = {
-        "endpoint": None,
+        "uri": None,
         "auth_type": "basic",  # 'basic', 'bearer', 'custom'
         "username": None,
         "password": None,
@@ -92,11 +92,11 @@ class WebSocketGenerator(Generator):
             setattr(self, key, value)
         
         # Validate required parameters
-        if not hasattr(self, 'endpoint') or not self.endpoint:
-            raise ValueError("WebSocket endpoint is required")
+        if not self.uri:
+            raise ValueError("WebSocket uri is required")
         
-        # Parse endpoint
-        parsed = urlparse(self.endpoint)
+        # Parse uri
+        parsed = urlparse(self.uri)
         self.host = parsed.hostname or "localhost"
         self.port = parsed.port or (443 if parsed.scheme == "wss" else 80)
         self.path = parsed.path or "/"
